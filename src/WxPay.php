@@ -128,7 +128,7 @@ class WxPay
 
     public static function  doResolveResult($response)
     {
-        $remove = array('[CDATA[', ']]', '<!');
+        $remove = array('[CDATA[', ']]', '<!', '-');
         $response = str_replace($remove, '', $response);
         $response = str_replace('></', '</', $response);
         $xml = simplexml_load_string($response);
