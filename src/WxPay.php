@@ -138,8 +138,3 @@ class WxPay
 
 }
 
-$out_trade_no = '10000000000000000000000000000003';
-$result = WxPay::getOrderQuery($out_trade_no);
-//$result = WxPay::getQrCode($out_trade_no, 3, 'XZ在线充值');
-
-var_dump($result);
