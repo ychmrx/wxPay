@@ -1,0 +1,17 @@
+{
+  "name": "yinjiang/wxpay",
+  "description": "微信扫码支付",
+  "authors": [
+    {
+      "name": "Yinjiang",
+      "email": "php361@php361.cn"
+    }
+  ],
+  "minimum-stability": "beta",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Yinjiang\\WxPay\\": "src/"
+    }
+  }
+}
