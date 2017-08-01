@@ -118,7 +118,7 @@ class WxPay
         return $result;
     }
 
-    public static function doUnifiedorder($out_trade_no, $money, $body = '', $product_id = 1, $tradeType = 'NATIVE')
+    public static function doUnifiedorder($out_trade_no, $money, $body = '', $product_id = 1, $tradeType = 'NATIVE', $openid = '')
     {
         $money = $money * 100;
         $params = array(
@@ -130,6 +130,9 @@ class WxPay
             'trade_type' => $tradeType,
             'product_id' => $product_id
         );
+        if ($tradeType == 'JSAPI' && $openid) {
+            $params['openid'] = $openid;
+        }
         $config = self::getConfig();
         $params = array_merge($params, $config);
         $sign = self::getSign($params);
