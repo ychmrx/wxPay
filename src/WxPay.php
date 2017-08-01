@@ -79,25 +79,7 @@ class WxPay
 
     public static function getQrCode($out_trade_no, $money, $body = '', $product_id = 1)
     {
-        $money = $money * 100;
-        $params = array(
-            'nonce_str' => md5(time()),
-            'body' => $body,
-            'out_trade_no' => $out_trade_no,
-            'total_fee' => $money,
-            'spbill_create_ip' => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '127.0.0.1',
-            'trade_type' => 'NATIVE',
-            'product_id' => $product_id
-        );
-        $config = self::getConfig();
-        $params = array_merge($params, $config);
-        $sign = self::getSign($params);
-        $params['sign'] = $sign;
-        unset($params['key']);
-        $xml = self::arrayToXml($params);
-        $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
-        $response = self::doRequest($xml, $url);
-        $response = self::doResolveResult($response);
+        $response = self::doUnifiedorder($out_trade_no, $money, $body, $product_id);
         $url = 'http://paysdk.weixin.qq.com/example/qrcode.php?data=' . $response['code_url'];
         return $url;
     }
@@ -134,6 +116,30 @@ class WxPay
         $xml = simplexml_load_string($response);
         $result = json_decode(json_encode($xml), TRUE);
         return $result;
+    }
+
+    public static function doUnifiedorder($out_trade_no, $money, $body = '', $product_id = 1, $tradeType = 'NATIVE')
+    {
+        $money = $money * 100;
+        $params = array(
+            'nonce_str' => md5(time()),
+            'body' => $body,
+            'out_trade_no' => $out_trade_no,
+            'total_fee' => $money,
+            'spbill_create_ip' => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '127.0.0.1',
+            'trade_type' => $tradeType,
+            'product_id' => $product_id
+        );
+        $config = self::getConfig();
+        $params = array_merge($params, $config);
+        $sign = self::getSign($params);
+        $params['sign'] = $sign;
+        unset($params['key']);
+        $xml = self::arrayToXml($params);
+        $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
+        $response = self::doRequest($xml, $url);
+        $response = self::doResolveResult($response);
+        return $response;
     }
 
 }
